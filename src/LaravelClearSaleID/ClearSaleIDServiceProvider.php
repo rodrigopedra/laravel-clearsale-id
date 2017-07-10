@@ -25,7 +25,7 @@ class ClearSaleIDServiceProvider extends ServiceProvider
                 $this->app->make( 'log' ),
                 config( 'clearsale-id.environment' ),
                 config( 'clearsale-id.entity_code' ),
-                config( 'clearsale-id.app_id' ),
+                config( 'clearsale-id.appid' ),
                 config( 'clearsale-id.debug' )
             );
         } );
