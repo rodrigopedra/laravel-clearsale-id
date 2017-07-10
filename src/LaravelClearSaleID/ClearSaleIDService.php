@@ -64,6 +64,11 @@ class ClearSaleIDService
         return 'API';
     }
 
+    public function getIp()
+    {
+        return $this->request->getClientIp();
+    }
+
     /**
      * Método para envio de pedidos e retorno do status
      *
