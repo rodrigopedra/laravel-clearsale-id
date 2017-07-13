@@ -14,7 +14,7 @@
   ],
   "require": {
     "php": ">=5.5.0",
-    "rodrigopedra/clearsale-id": "0.3.*",
+    "rodrigopedra/clearsale-id": "0.4.*",
     "illuminate/support": "5.3.*",
     "illuminate/contracts": "5.3.*",
     "illuminate/http": "5.3.*"
