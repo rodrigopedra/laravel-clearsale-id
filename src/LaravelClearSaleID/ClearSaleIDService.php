@@ -11,7 +11,7 @@ use RodrigoPedra\ClearSaleID\Service\Integration;
 use RodrigoPedra\ClearSaleID\Entity\Request\Order;
 use RodrigoPedra\ClearSaleID\Environment\Production;
 use RodrigoPedra\ClearSaleID\Entity\Response\PackageStatus;
-use RodrigoPedra\ClearSaleID\Entity\Response\TransactionStatus;
+use RodrigoPedra\ClearSaleID\Entity\Response\UpdateOrderStatus;
 
 class ClearSaleIDService
 {
@@ -120,11 +120,11 @@ class ClearSaleIDService
     /**
      * Retorna os detalhes do pedido após o pedido de análise
      *
-     * @return TransactionStatus
+     * @return UpdateOrderStatus
      */
-    public function getTransactionStatus()
+    public function getUpdateOrderStatus()
     {
-        return $this->analysisService->getTransactionStatus();
+        return $this->analysisService->getUpdateOrderStatus();
     }
 
     private function buildAnalysisService( $environment, LoggerInterface $logger, $entityCode, $isDebug )
