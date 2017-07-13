@@ -21,12 +21,12 @@ class ClearSaleIDServiceProvider extends ServiceProvider
     {
         $this->app->singleton( 'clearsale-id', function () {
             return new ClearSaleIDService(
-                $this->app->make( 'request' ),
-                $this->app->make( 'log' ),
-                config( 'clearsale-id.environment' ),
-                config( 'clearsale-id.entity_code' ),
-                config( 'clearsale-id.appid' ),
-                config( 'clearsale-id.debug' )
+                $this->app[ 'request' ],
+                $this->app[ 'log' ],
+                $this->app[ 'config' ]->get( 'clearsale-id.environment' ),
+                $this->app[ 'config' ]->get( 'clearsale-id.entity_code' ),
+                $this->app[ 'config' ]->get( 'clearsale-id.appid' ),
+                $this->app[ 'config' ]->get( 'clearsale-id.debug' )
             );
         } );
     }
