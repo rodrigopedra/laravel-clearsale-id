@@ -14,6 +14,9 @@
   ],
   "require": {
     "php": ">=5.5.0",
+    "ext-openssl": "*",
+    "ext-soap": "*",
+    "ext-xml": "*",
     "rodrigopedra/clearsale-id": "0.4.*",
     "illuminate/support": "5.3.*",
     "illuminate/contracts": "5.3.*",
