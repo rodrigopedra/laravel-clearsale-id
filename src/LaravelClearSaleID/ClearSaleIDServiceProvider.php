@@ -29,6 +29,8 @@ class ClearSaleIDServiceProvider extends ServiceProvider
                 $this->app[ 'config' ]->get( 'clearsale-id.debug' )
             );
         } );
+
+        $this->app->alias( 'clearsale-id', ClearSaleIDService::class );
     }
 
     private function bootConfig()
