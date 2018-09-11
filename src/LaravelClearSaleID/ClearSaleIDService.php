@@ -4,26 +4,34 @@ namespace RodrigoPedra\LaravelClearSaleID;
 
 use Illuminate\Http\Request;
 use Psr\Log\LoggerInterface;
-use RodrigoPedra\ClearSaleID\Service\Analysis;
-use RodrigoPedra\ClearSaleID\Service\Connector;
-use RodrigoPedra\ClearSaleID\Environment\Sandbox;
-use RodrigoPedra\ClearSaleID\Service\Integration;
 use RodrigoPedra\ClearSaleID\Entity\Request\Order;
 use RodrigoPedra\ClearSaleID\Environment\Production;
-use RodrigoPedra\ClearSaleID\Entity\Response\PackageStatus;
-use RodrigoPedra\ClearSaleID\Entity\Response\UpdateOrderStatus;
+use RodrigoPedra\ClearSaleID\Environment\Sandbox;
+use RodrigoPedra\ClearSaleID\Service\Analysis;
+use RodrigoPedra\ClearSaleID\Service\Connector;
+use RodrigoPedra\ClearSaleID\Service\Integration;
 
 class ClearSaleIDService
 {
-    /** @var Request */
+    /** @var  \Illuminate\Http\Request */
     private $request;
 
-    /** @var string */
+    /** @var  string */
     private $appId;
 
-    /** @var Analysis */
+    /** @var  \RodrigoPedra\ClearSaleID\Service\Analysis */
     private $analysisService;
 
+    /**
+     * ClearSaleIDService constructor.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  \Psr\Log\LoggerInterface $logger
+     * @param  string                   $environment
+     * @param  string                   $entityCode
+     * @param  string                   $appId
+     * @param  bool                     $isDebug
+     */
     public function __construct(
         Request $request,
         LoggerInterface $logger,
@@ -39,6 +47,9 @@ class ClearSaleIDService
         $this->analysisService = $this->buildAnalysisService( $environment, $logger, $entityCode, $isDebug );
     }
 
+    /**
+     * @return string
+     */
     public function getSessionId()
     {
         // web
@@ -50,11 +61,17 @@ class ClearSaleIDService
         return md5( uniqid( rand(), true ) );
     }
 
+    /**
+     * @return string
+     */
     public function getAppId()
     {
         return $this->appId;
     }
 
+    /**
+     * @return string
+     */
     public function getOrigin()
     {
         if ($this->request->hasSession()) {
@@ -64,6 +81,9 @@ class ClearSaleIDService
         return 'API';
     }
 
+    /**
+     * @return string|null
+     */
     public function getIp()
     {
         return $this->request->getClientIp();
@@ -72,9 +92,10 @@ class ClearSaleIDService
     /**
      * Método para envio de pedidos e retorno do status
      *
-     * @param  Order $order
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Order $order
      *
      * @return string
+     * @throws \Exception
      */
     public function analysis( Order $order )
     {
@@ -100,7 +121,7 @@ class ClearSaleIDService
      * @param  string $newStatusCode
      * @param  string $notes
      *
-     * @return boolean
+     * @return bool
      */
     public function updateOrderStatus( $orderId, $newStatusCode, $notes = '' )
     {
@@ -110,7 +131,7 @@ class ClearSaleIDService
     /**
      * Retorna os detalhes do pedido após o pedido de análise
      *
-     * @return PackageStatus
+     * @return \RodrigoPedra\ClearSaleID\Entity\Response\PackageStatus
      */
     public function getPackageStatus()
     {
@@ -120,13 +141,21 @@ class ClearSaleIDService
     /**
      * Retorna os detalhes do pedido após o pedido de análise
      *
-     * @return UpdateOrderStatus
+     * @return \RodrigoPedra\ClearSaleID\Entity\Response\UpdateOrderStatus
      */
     public function getUpdateOrderStatus()
     {
         return $this->analysisService->getUpdateOrderStatus();
     }
 
+    /**
+     * @param  string                   $environment
+     * @param  \Psr\Log\LoggerInterface $logger
+     * @param  string                   $entityCode
+     * @param  bool                     $isDebug
+     *
+     * @return \RodrigoPedra\ClearSaleID\Service\Analysis
+     */
     private function buildAnalysisService( $environment, LoggerInterface $logger, $entityCode, $isDebug )
     {
         $environment = $environment === 'production'

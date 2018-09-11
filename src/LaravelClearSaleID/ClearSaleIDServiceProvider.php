@@ -9,6 +9,11 @@ class ClearSaleIDServiceProvider extends ServiceProvider
 {
     protected $defer = false;
 
+    /**
+     * Bootstrap services.
+     *
+     * @return void
+     */
     public function boot()
     {
         $this->bootConfig();
@@ -17,6 +22,11 @@ class ClearSaleIDServiceProvider extends ServiceProvider
         $this->app->alias( 'clearsale-id', ClearSaleIDService::class );
     }
 
+    /**
+     * Register services.
+     *
+     * @return void
+     */
     public function register()
     {
         $this->app->singleton( 'clearsale-id', function () {
