@@ -6,7 +6,7 @@ Integração com o WebService da ClearSale ID para Laravel.
 
 ## Requisitos
 
-PHP 5.5+
+PHP 5.6+
 
 Extensões PHP
 
@@ -18,7 +18,7 @@ ext-xml
 
 No Ubuntu, você pode instalar através do seguinte comando:
 
-```
+```bash
 sudo apt-get install openssl php-soap php-xml
 ```
 
@@ -28,10 +28,6 @@ A extensão `openssl` deve ser habilitada em seu arquivo `php.ini`.
 
 A maneira mais fácil de instalar a biblioteca é através do [Composer](http://getcomposer.org/).
 
-```JSON
-{
-    "require": {
-        "rodrigopedra/laravel-clearsale-id": "^0.3"
-    }
-}
+```bash
+composer require rodrigopedra/laravel-clearsale-id
 ```
