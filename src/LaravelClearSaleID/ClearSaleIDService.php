@@ -108,6 +108,7 @@ class ClearSaleIDService
      * @param  string $orderId
      *
      * @return string
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
      */
     public function checkOrderStatus( $orderId )
     {
@@ -122,6 +123,8 @@ class ClearSaleIDService
      * @param  string $notes
      *
      * @return bool
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
+     * @throws \RodrigoPedra\ClearSaleID\Exception\UpdateOrderStatusException
      */
     public function updateOrderStatus( $orderId, $newStatusCode, $notes = '' )
     {
