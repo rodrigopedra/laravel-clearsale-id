@@ -6,8 +6,8 @@ Integração com o WebService da ClearSale ID para Laravel.
 
 ## Requisitos
 
-- PHP 5.6+
-- Laravel 5.3+
+- PHP 7.1.3+
+- Laravel 5.6+
 - Extensões PHP
     
     ```
@@ -31,3 +31,11 @@ A maneira mais fácil de instalar a biblioteca é através do [Composer](http://
 ```bash
 composer require rodrigopedra/laravel-clearsale-id
 ```
+
+Se for necessário, é possível modificar o arquivo de configuração diretamente, executando o comando abaixo:
+
+```bash
+php artisan vendor:publish --provider="RodrigoPedra\LaravelClearSaleID\ClearSaleIDServiceProvider"
+```
+
+

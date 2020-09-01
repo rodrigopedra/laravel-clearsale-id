@@ -18,8 +18,6 @@ class ClearSaleIDServiceProvider extends ServiceProvider
     {
         $this->bootConfig();
         $this->bootViews();
-
-        $this->app->alias( 'clearsale-id', ClearSaleIDService::class );
     }
 
     /**
@@ -46,7 +44,7 @@ class ClearSaleIDServiceProvider extends ServiceProvider
     private function bootConfig()
     {
         $this->publishes( [
-            __DIR__ . '/../config/clearsale-id.php' => config_path( 'clearsale-id.php' ),
+            __DIR__ . '/../config/clearsale-id.php' => $this->app->configPath( 'clearsale-id.php' ),
         ] );
 
         $this->mergeConfigFrom( __DIR__ . '/../config/clearsale-id.php', 'clearsale-id' );
