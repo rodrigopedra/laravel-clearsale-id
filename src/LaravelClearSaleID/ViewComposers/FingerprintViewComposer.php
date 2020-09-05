@@ -1,10 +1,11 @@
 <?php
 
-namespace RodrigoPedra\LaravelClearSaleID;
+namespace RodrigoPedra\LaravelClearSaleID\ViewComposers;
 
 use Illuminate\Contracts\View\View;
+use RodrigoPedra\LaravelClearSaleID\ClearSaleIDService;
 
-class ClearSaleIDViewComposer
+class FingerprintViewComposer
 {
     /**
      * @var \RodrigoPedra\LaravelClearSaleID\ClearSaleIDService
@@ -16,7 +17,7 @@ class ClearSaleIDViewComposer
         $this->clearSaleIDService = $clearSaleIDService;
     }
 
-    public function compose(View $view)
+    public function compose(View $view): void
     {
         $view->with('sessionId', $this->clearSaleIDService->getSessionId());
         $view->with('appId', $this->clearSaleIDService->getAppId());

@@ -8,6 +8,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 use Psr\Log\LoggerInterface;
+use RodrigoPedra\LaravelClearSaleID\ViewComposers\FingerprintViewComposer;
 
 class ClearSaleIDServiceProvider extends ServiceProvider
 {
@@ -52,7 +53,7 @@ class ClearSaleIDServiceProvider extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__ . '/../resources/views', 'clearsale-id');
 
-        $viewFactory->composer('clearsale-id::fingerprint', ClearSaleIDViewComposer::class);
+        $viewFactory->composer('clearsale-id::fingerprint', FingerprintViewComposer::class);
     }
 
     public function provides(): array
