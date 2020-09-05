@@ -5,6 +5,8 @@ namespace RodrigoPedra\LaravelClearSaleID;
 use Illuminate\Http\Request;
 use Psr\Log\LoggerInterface;
 use RodrigoPedra\ClearSaleID\Entity\Request\Order;
+use RodrigoPedra\ClearSaleID\Entity\Response\PackageStatus;
+use RodrigoPedra\ClearSaleID\Entity\Response\UpdateOrderStatus;
 use RodrigoPedra\ClearSaleID\Environment\Production;
 use RodrigoPedra\ClearSaleID\Environment\Sandbox;
 use RodrigoPedra\ClearSaleID\Service\Analysis;
@@ -22,57 +24,34 @@ class ClearSaleIDService
     /** @var  \RodrigoPedra\ClearSaleID\Service\Analysis */
     private $analysisService;
 
-    /**
-     * ClearSaleIDService constructor.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Psr\Log\LoggerInterface $logger
-     * @param  string                   $environment
-     * @param  string                   $entityCode
-     * @param  string                   $appId
-     * @param  bool                     $isDebug
-     */
     public function __construct(
         Request $request,
         LoggerInterface $logger,
-        $environment,
-        $entityCode,
-        $appId,
-        $isDebug
+        string $environment,
+        string $entityCode,
+        string $appId,
+        bool $isDebug
     ) {
         $this->request = $request;
-
         $this->appId = $appId;
-
-        $this->analysisService = $this->buildAnalysisService( $environment, $logger, $entityCode, $isDebug );
+        $this->analysisService = $this->makeAnalysisService($environment, $logger, $entityCode, $isDebug);
     }
 
-    /**
-     * @return string
-     */
-    public function getSessionId()
+    public function getSessionId(): string
     {
-        // web
         if ($this->request->hasSession()) {
             return $this->request->session()->getId();
         }
 
-        // api
-        return md5( uniqid( rand(), true ) );
+        return md5(uniqid(rand(), true));
     }
 
-    /**
-     * @return string
-     */
-    public function getAppId()
+    public function getAppId(): string
     {
         return $this->appId;
     }
 
-    /**
-     * @return string
-     */
-    public function getOrigin()
+    public function getOrigin(): string
     {
         if ($this->request->hasSession()) {
             return 'WEB';
@@ -81,10 +60,7 @@ class ClearSaleIDService
         return 'API';
     }
 
-    /**
-     * @return string|null
-     */
-    public function getIp()
+    public function getIp(): ?string
     {
         return $this->request->getClientIp();
     }
@@ -92,43 +68,39 @@ class ClearSaleIDService
     /**
      * Método para envio de pedidos e retorno do status
      *
-     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Order $order
-     *
+     * @param  \RodrigoPedra\ClearSaleID\Entity\Request\Order  $order
      * @return string
-     * @throws \Exception
+     * @throws \SoapFault
      */
-    public function analysis( Order $order )
+    public function analysis(Order $order)
     {
-        return $this->analysisService->analysis( $order );
+        return $this->analysisService->analysis($order);
     }
 
     /**
      * Retorna o status de aprovação de um pedido
      *
-     * @param  string $orderId
-     *
+     * @param  string  $orderId
      * @return string
-     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
+     * @throws \SoapFault
      */
-    public function checkOrderStatus( $orderId )
+    public function checkOrderStatus(string $orderId)
     {
-        return $this->analysisService->checkOrderStatus( $orderId );
+        return $this->analysisService->checkOrderStatus($orderId);
     }
 
     /**
      * Método para atualizar o pedido com o status do pagamento
      *
-     * @param  string $orderId
-     * @param  string $newStatusCode
-     * @param  string $notes
-     *
+     * @param  string  $orderId
+     * @param  string  $newStatusCode
+     * @param  string  $notes
      * @return bool
-     * @throws \RodrigoPedra\ClearSaleID\Exception\UnexpectedErrorException
-     * @throws \RodrigoPedra\ClearSaleID\Exception\UpdateOrderStatusException
+     * @throws \SoapFault
      */
-    public function updateOrderStatus( $orderId, $newStatusCode, $notes = '' )
+    public function updateOrderStatus(string $orderId, string $newStatusCode, string $notes = ''): bool
     {
-        return $this->analysisService->updateOrderStatus( $orderId, $newStatusCode, $notes );
+        return $this->analysisService->updateOrderStatus($orderId, $newStatusCode, $notes);
     }
 
     /**
@@ -136,7 +108,7 @@ class ClearSaleIDService
      *
      * @return \RodrigoPedra\ClearSaleID\Entity\Response\PackageStatus
      */
-    public function getPackageStatus()
+    public function getPackageStatus(): PackageStatus
     {
         return $this->analysisService->getPackageStatus();
     }
@@ -146,30 +118,26 @@ class ClearSaleIDService
      *
      * @return \RodrigoPedra\ClearSaleID\Entity\Response\UpdateOrderStatus
      */
-    public function getUpdateOrderStatus()
+    public function getUpdateOrderStatus(): UpdateOrderStatus
     {
         return $this->analysisService->getUpdateOrderStatus();
     }
 
-    /**
-     * @param  string                   $environment
-     * @param  \Psr\Log\LoggerInterface $logger
-     * @param  string                   $entityCode
-     * @param  bool                     $isDebug
-     *
-     * @return \RodrigoPedra\ClearSaleID\Service\Analysis
-     */
-    private function buildAnalysisService( $environment, LoggerInterface $logger, $entityCode, $isDebug )
-    {
+    private function makeAnalysisService(
+        string $environment,
+        LoggerInterface $logger,
+        string $entityCode,
+        bool $isDebug
+    ): Analysis {
         $environment = $environment === 'production'
-            ? new Production( $entityCode, $logger )
-            : new Sandbox( $entityCode, $logger );
+            ? new Production($entityCode, $logger)
+            : new Sandbox($entityCode, $logger);
 
-        $environment->setDebug( boolval( $isDebug ) );
+        $environment->setDebug(boolval($isDebug));
 
-        $connector   = new Connector( $environment );
-        $integration = new Integration( $connector );
+        $connector = new Connector($environment);
+        $integration = new Integration($connector);
 
-        return new Analysis( $integration );
+        return new Analysis($integration);
     }
 }

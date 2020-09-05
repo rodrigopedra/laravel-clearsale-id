@@ -3,14 +3,12 @@
 namespace RodrigoPedra\LaravelClearSaleID\Facades;
 
 use Illuminate\Support\Facades\Facade;
+use RodrigoPedra\LaravelClearSaleID\ClearSaleIDService;
 
 class ClearSaleIDFacade extends Facade
 {
-    /**
-     * @return string
-     */
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
-        return 'clearsale-id';
+        return ClearSaleIDService::class;
     }
 }
