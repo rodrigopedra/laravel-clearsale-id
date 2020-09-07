@@ -22,6 +22,8 @@ class ClearSaleIDServiceProvider extends ServiceProvider
 
     public function register(): void
     {
+        $this->mergeConfigFrom(__DIR__ . '/../config/clearsale-id.php', 'clearsale-id');
+
         $this->app->singleton(ClearSaleIDService::class, static function (Container $container): ClearSaleIDService {
             $config = $container->make(Repository::class);
             $request = $container->make(Request::class);
@@ -42,11 +44,11 @@ class ClearSaleIDServiceProvider extends ServiceProvider
 
     private function bootConfig(): void
     {
-        $this->publishes([
-            __DIR__ . '/../config/clearsale-id.php' => $this->app->configPath('clearsale-id.php'),
-        ]);
-
-        $this->mergeConfigFrom(__DIR__ . '/../config/clearsale-id.php', 'clearsale-id');
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../config/clearsale-id.php' => $this->app->configPath('clearsale-id.php'),
+            ], 'laravel-clearsale-id-config');
+        }
     }
 
     private function bootViews(Factory $viewFactory): void
